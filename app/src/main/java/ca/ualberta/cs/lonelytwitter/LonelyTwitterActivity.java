@@ -23,7 +23,7 @@ public class LonelyTwitterActivity extends Activity {
 	private static final String FILENAME = "file.sav";
 	private EditText bodyText;
 	private ListView oldTweetsList;
-	
+
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -48,7 +48,6 @@ public class LonelyTwitterActivity extends Activity {
 
 	@Override
 	protected void onStart() {
-		// TODO Auto-generated method stub
 		super.onStart();
 		String[] tweets = loadFromFile();
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
@@ -76,12 +75,23 @@ public class LonelyTwitterActivity extends Activity {
 		}
 		return tweets.toArray(new String[tweets.size()]);
 	}
-	
+
 	private void saveInFile(String text, Date date) {
 		try {
+
+			NormalTweet myTweet = new NormalTweet("");
+			myTweet.setMessage(text);
+
+			// for now, all tweets are happy!
+			Happy m = new Happy();
+			myTweet.addNewMood(m);
+
+//			Sad m2 = new Sad();
+//			myTweet.addNewMood(m2);
+
 			FileOutputStream fos = openFileOutput(FILENAME,
 					Context.MODE_APPEND);
-			fos.write(new String(date.toString() + " | " + text)
+			fos.write(new String(date.toString() + " | " + text + " | " + myTweet.getMoodString() + "\n")
 					.getBytes());
 			fos.close();
 		} catch (FileNotFoundException e) {
@@ -89,6 +99,9 @@ public class LonelyTwitterActivity extends Activity {
 			e.printStackTrace();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		catch (TweetTooLongException e) {
 			e.printStackTrace();
 		}
 	}
